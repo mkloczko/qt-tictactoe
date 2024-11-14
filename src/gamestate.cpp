@@ -3,7 +3,6 @@
 GameState::GameState(QObject *parent)
     : QObject{parent}
 {
-    restart(Initiative::Opponent);
 }
 
 const std::array<GameState::SlotState,9> & GameState::getSlots() const
@@ -13,15 +12,14 @@ const std::array<GameState::SlotState,9> & GameState::getSlots() const
 
 void GameState::setSlotAt(int ix, SlotState state)
 {
+    Q_ASSERT(ix >= 0 && ix < 9);
 
+    m_slots[ix] = state;
 }
 
 GameState::SlotState GameState::getSlotAt(int ix) const
 {
-    return SlotState::Empty;
-}
+    Q_ASSERT(ix >= 0 && ix < 9);
 
-void GameState::restart(Initiative newInitiative)
-{
-
+    return m_slots[ix];
 }
