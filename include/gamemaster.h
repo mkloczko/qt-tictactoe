@@ -2,12 +2,14 @@
 #define GAMEMASTER_H
 
 #include <QObject>
-
-class GameState;
+#include <QtQml/qqmlregistration.h>
+#include "gamestate.h"
 
 class GameMaster : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(const GameState* gameState READ getGameState)
+    QML_ELEMENT
 public:
     enum class Initiative {
         Player,
@@ -17,10 +19,11 @@ public:
 
     explicit GameMaster(QObject *parent = nullptr);
 
-    void restart(Initiative newInitiative);
-    bool playAt(int ix);
-    Initiative getInitiative();
+    Q_INVOKABLE void restart(Initiative newInitiative);
+    Q_INVOKABLE bool playAt(int ix);
 
+    const GameState * getGameState() const {return m_gameState;}
+    const Initiative getInitiative() const {return m_initiative;}
 
 protected:
     GameState * m_gameState = nullptr;

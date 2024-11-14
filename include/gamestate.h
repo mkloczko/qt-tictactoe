@@ -2,11 +2,13 @@
 #define GAMESTATE_H
 
 #include <QObject>
+#include <QtQml/qqmlregistration.h>
 #include <array>
 
 class GameState : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
 public:
     enum class SlotState {
         Empty,
@@ -18,10 +20,8 @@ public:
 
     const std::array<SlotState,9> & getSlots() const;
     void setSlotAt(int ix, SlotState state);
-    SlotState getSlotAt(int ix) const;
+    Q_INVOKABLE SlotState getSlotAt(int ix) const;
 
-signals:
-    //Will need a signal to show that slots have changed - and/or only specific slots. For drawing purposes.
 protected:
     std::array<SlotState,9> m_slots;
 };

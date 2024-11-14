@@ -18,6 +18,7 @@ qt_add_qml_module(tictactoe-lib
     QML_FILES qml/Main.qml
     SOURCES include/gamestate.h src/gamestate.cpp
     SOURCES include/gamemaster.h src/gamemaster.cpp
+    QML_FILES qml/Board.qml
 )
 
 target_include_directories(tictactoe-lib PUBLIC "include/")
