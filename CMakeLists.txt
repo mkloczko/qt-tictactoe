@@ -15,10 +15,10 @@ qt_add_library(tictactoe-lib)
 qt_add_qml_module(tictactoe-lib
     URI tictactoe
     VERSION 1.0
-    QML_FILES qml/Main.qml
+    QML_FILES qml/Main.qml qml/Board.qml
     SOURCES include/gamestate.h src/gamestate.cpp
     SOURCES include/gamemaster.h src/gamemaster.cpp
-    QML_FILES qml/Board.qml
+    SOURCES include/player.h src/player.cpp
 )
 
 target_include_directories(tictactoe-lib PUBLIC "include/")

@@ -6,6 +6,9 @@ Item {
         Component.onCompleted: {
             restart(GameMaster.Initiative.Player)
         }
+        onBoardUpdated: {
+            canvas.requestPaint()
+        }
     }
 
     MouseArea {
@@ -15,8 +18,10 @@ Item {
         {
             var x = Math.floor(mouse.x/(width/3));
             var y = Math.floor(mouse.y/(height/3));
-            parent.gameMaster.playAt(y*3 + x)
-            canvas.requestPaint()
+            var player = parent.gameMaster.getCurrentHumanPlayer();
+            if (player)
+                player.selectSlot(3*y + x)
+
         }
     }
 

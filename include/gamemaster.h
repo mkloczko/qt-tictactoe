@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
 #include "gamestate.h"
+#include "player.h"
 
 class GameMaster : public QObject
 {
@@ -12,23 +13,37 @@ class GameMaster : public QObject
     QML_ELEMENT
 public:
     enum class Initiative {
-        Player,
-        Opponent,
+        Nough,
+        Cross,
         Finish
     }; Q_ENUM(Initiative)
 
     explicit GameMaster(QObject *parent = nullptr);
 
     Q_INVOKABLE void restart(Initiative newInitiative);
-    Q_INVOKABLE bool playAt(int ix);
+    Q_INVOKABLE HumanPlayer * getCurrentHumanPlayer();
 
     const GameState * getGameState() const {return m_gameState;}
     const Initiative getInitiative() const {return m_initiative;}
 
+public slots:
+    void noughMove(int ix);
+    void crossMove(int ix);
+
+signals:
+    void boardUpdated();
+
 protected:
+    void performMove(Initiative who, int ix);
+    void askNext();
+    bool checkForEndCondition(int ix);
+
     GameState * m_gameState = nullptr;
     Initiative m_initiative;
-signals:
+    int m_lastMove = -1;
+
+    Player * m_noughPlayer;
+    Player * m_crossPlayer;
 };
 
 #endif // GAMEMASTER_H
