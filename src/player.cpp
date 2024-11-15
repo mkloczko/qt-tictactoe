@@ -16,6 +16,11 @@ Player::Player(Team team, QObject *parent)
     : QObject{parent}, m_team(team)
 {}
 
+Player::~Player()
+{
+    m_worker.waitForFinished();
+}
+
 QFuture<int> Player::play(const GameState * gameState, int lastMove)
 {
     return QtConcurrent::run([this]() -> int {
@@ -26,11 +31,19 @@ QFuture<int> Player::play(const GameState * gameState, int lastMove)
 
 void Player::startTurn(const GameState * gameState, int lastMove)
 {
-    play(gameState, lastMove).then([this](int result) {
+    m_worker = play(gameState, lastMove);
+    m_worker.then([this](int result) {
         emit endTurn(result);
     }).onFailed([this] {
         emit endTurn(-1);
     });
+}
+
+HumanPlayer::~HumanPlayer()
+{
+    m_selection = -1;
+    m_mutex.tryLock();
+    m_mutex.unlock();
 }
 
 QFuture<int> HumanPlayer::play(const GameState * gameState, int lastMove)

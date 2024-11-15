@@ -20,7 +20,7 @@ public:
 
     explicit GameMaster(QObject *parent = nullptr);
 
-    Q_INVOKABLE void restart(Initiative newInitiative);
+    Q_INVOKABLE void restart(Initiative newInitiative, bool humanNough, bool humanCross);
     Q_INVOKABLE HumanPlayer * getCurrentHumanPlayer();
 
     const GameState * getGameState() const {return m_gameState;}
@@ -31,7 +31,8 @@ public slots:
     void crossMove(int ix);
 
 signals:
-    void boardUpdated();
+    void boardUpdated(int ix);
+    void restarted();
 
 protected:
     void performMove(Initiative who, int ix);

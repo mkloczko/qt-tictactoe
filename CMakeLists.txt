@@ -15,7 +15,7 @@ qt_add_library(tictactoe-lib)
 qt_add_qml_module(tictactoe-lib
     URI tictactoe
     VERSION 1.0
-    QML_FILES qml/Main.qml qml/Board.qml
+    QML_FILES qml/Main.qml qml/Board.qml qml/Menu.qml
     SOURCES include/gamestate.h src/gamestate.cpp
     SOURCES include/gamemaster.h src/gamemaster.cpp
     SOURCES include/player.h src/player.cpp

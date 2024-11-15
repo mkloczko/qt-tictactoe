@@ -16,6 +16,7 @@ public:
     }; Q_ENUM(Team)
 
     explicit Player(Team team, QObject *parent = nullptr);
+    virtual ~Player();
 
     virtual QFuture<int> play(const GameState * gameState, int lastMove);
 public slots:
@@ -23,6 +24,7 @@ public slots:
 signals:
     void endTurn(int move);
 protected:
+    QFuture<int> m_worker;
     Team m_team;
 };
 
@@ -31,6 +33,7 @@ class HumanPlayer : public Player
     Q_OBJECT
 public:
     explicit HumanPlayer(Team team, QObject *parent = nullptr) : Player(team,parent) {}
+    virtual ~HumanPlayer();
 
     virtual QFuture<int> play(const GameState * gameState, int lastMove) override;
     Q_INVOKABLE void selectSlot(int ix);

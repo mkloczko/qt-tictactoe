@@ -5,22 +5,38 @@
 GameMaster::GameMaster(QObject *parent)
     : QObject{parent}
 {
+    m_initiative = Initiative::Finish;
     m_gameState = new GameState(this);
-    m_crossPlayer = new HumanPlayer(Player::Team::Crosses, this);
-    m_noughPlayer = new Player(Player::Team::Noughs, this);
+}
+
+void GameMaster::restart(Initiative newInitiative, bool humanNough, bool humanCross)
+{
+    auto createPlayer = [this](Player::Team team, bool isHuman) -> Player* {
+        if (isHuman)
+            return new HumanPlayer(team,this);
+        else
+            return new Player(team,this);
+    };
+
+    if (m_crossPlayer)
+        delete m_crossPlayer;
+    if (m_noughPlayer)
+        delete m_noughPlayer;
+
+    m_crossPlayer = createPlayer(Player::Team::Crosses, humanCross);
+    m_noughPlayer = createPlayer(Player::Team::Noughs, humanNough);
 
     connect(m_crossPlayer, &Player::endTurn, this, &GameMaster::crossMove);
     connect(m_noughPlayer, &Player::endTurn, this, &GameMaster::noughMove);
-}
 
-void GameMaster::restart(Initiative newInitiative)
-{
     m_initiative = newInitiative;
     m_lastMove = -1;
 
     for(int i = 0; i < 9; i++){
         m_gameState->setSlotAt(i, GameState::SlotState::Empty);
     }
+
+    emit restarted();
 
     askNext();
 }
@@ -50,7 +66,7 @@ void GameMaster::crossMove(int ix)
 void GameMaster::performMove(Initiative who, int ix)
 {
     using SlotState = GameState::SlotState;
-    if (m_initiative != who)
+    if (m_initiative != who || ix < 0 || ix >= 9)
         return;
 
     Initiative other = who == Initiative::Cross ? Initiative::Nough : Initiative::Cross;
@@ -63,7 +79,7 @@ void GameMaster::performMove(Initiative who, int ix)
         else
             m_initiative = other;
 
-        emit boardUpdated();
+        emit boardUpdated(ix);
     }
 
     askNext();
@@ -71,6 +87,9 @@ void GameMaster::performMove(Initiative who, int ix)
 
 void GameMaster::askNext()
 {
+    if (not m_noughPlayer || not m_crossPlayer)
+        return;
+
     switch(m_initiative) {
     case Initiative::Cross:
         m_crossPlayer->startTurn(m_gameState, m_lastMove);
