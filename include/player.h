@@ -52,6 +52,7 @@ public:
     virtual QFuture<int> play(const BoardState *boardState) override;
 protected:
     QFuture<int> sendMove(int move);
+
     QRandomGenerator m_random;
 };
 

@@ -14,6 +14,10 @@
             isDir = pkgs.top-level.impure.isDir;
         in {
           packages.default = package;
+          apps.default = {
+              type = "app";
+              program = "${self'.packages.default}/bin/tictactoe-app";
+          };
           devShells.default =
             pkgs.mkShell rec { 
                 nativeBuildInputs = dev_pkgs ++ package.nativeBuildInputs;
