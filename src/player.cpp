@@ -185,10 +185,14 @@ QFuture<int> ComputerPlayer::play(const BoardState * boardState, int lastMove)
         const int y = i / 3;
 
         double weight = 5.0;
+        weight += (otherColumns[x] == 1) * 5;
+        weight += (otherRows[y] == 1) * 5;
         weight += (otherColumns[x] == 0) * (10 + 25 * myColumns[x]);
         weight += (otherRows[y] == 0) * (10 + 25 * myRows[y]);
         weight += ((i == 0 || i == 4 || i == 8) && otherTopLeftDiagonal == 0) * (10 + 25 * myTopLeftDiagonal);
         weight += ((i == 2 || i == 4 || i == 6) && otherTopRightDiagonal == 0) * (10 + 25 * myTopRightDiagonal);
+        weight += ((i == 0 || i == 4 || i == 8) && (otherTopLeftDiagonal == 1) * 5);
+        weight += ((i == 2 || i == 4 || i == 6) && (otherTopRightDiagonal == 1) * 5);
         weighted.append({i,weight});
         totalWeight += weight;
     }
@@ -201,9 +205,8 @@ QFuture<int> ComputerPlayer::play(const BoardState * boardState, int lastMove)
     totalWeight = 0;
     for (const auto & [i, weight] : weighted) {
         totalWeight += weight;
-        if (chosenWeight < totalWeight) {
+        if (chosenWeight < totalWeight)
             return sendMove(i);
-        }
     }
 
     //Failsafe
