@@ -83,7 +83,7 @@ Item {
         function drawElement(ix)
         {
             var ctx = getContext("2d");
-            var drawCross = function(left, top, width, height, margin){
+            var drawCross = function (left, top, width, height, margin) {
                 ctx.lineWidth = 3;
                 ctx.strokeStyle = "#AA3322"
                 ctx.beginPath()
@@ -94,7 +94,7 @@ Item {
                 ctx.stroke()
             }
 
-            var drawNough = function(left, top, width, height,margin){
+            var drawNough = function (left, top, width, height,margin) {
                 ctx.lineWidth = 3;
                 ctx.strokeStyle = "#00AA00"
                 ctx.beginPath()

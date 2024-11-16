@@ -41,7 +41,6 @@ protected:
 
     BoardState * m_boardState = nullptr;
     Initiative m_initiative;
-    int m_lastMove = -1;
 
     Player * m_noughPlayer;
     Player * m_crossPlayer;

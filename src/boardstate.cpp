@@ -35,25 +35,20 @@ BoardResult BoardState::checkForEndCondition(int ix)
     bool diagonalTopRightWin = ix == diagonalTopRight[0] || ix == diagonalTopRight[1] || ix == diagonalTopRight[2];
     bool allChecked = true;
 
-    for (int i = 0; i < 3 && columnWin; i++) {
+    for (int i = 0; i < 3 && columnWin; i++)
         columnWin = getFieldAt(i*3 + columnId) == state;
-    }
 
-    for (int i = 0; i < 3 && rowWin; i++) {
+    for (int i = 0; i < 3 && rowWin; i++)
         rowWin = getFieldAt(rowId*3 + i) == state;
-    }
 
-    for (int i = 0; i < 3 && diagonalTopLeftWin; i++) {
+    for (int i = 0; i < 3 && diagonalTopLeftWin; i++)
         diagonalTopLeftWin = getFieldAt(diagonalTopLeft[i]) == state;
-    }
 
-    for (int i = 0; i < 3 && diagonalTopRightWin; i++) {
+    for (int i = 0; i < 3 && diagonalTopRightWin; i++)
         diagonalTopRightWin = getFieldAt(diagonalTopRight[i]) == state;
-    }
 
-    for (int i = 0; i < 9 && allChecked; i++) {
+    for (int i = 0; i < 9 && allChecked; i++)
         allChecked = getFieldAt(i) != Field::Empty;
-    }
 
     BoardResult result;
     result.isFinished = columnWin || rowWin || diagonalTopLeftWin || diagonalTopRightWin || allChecked;

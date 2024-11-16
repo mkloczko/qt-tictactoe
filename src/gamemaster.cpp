@@ -30,11 +30,9 @@ void GameMaster::restart(Initiative newInitiative, bool humanNough, bool humanCr
     connect(m_noughPlayer, &Player::endTurn, this, &GameMaster::noughMove);
 
     m_initiative = newInitiative;
-    m_lastMove = -1;
 
-    for(int i = 0; i < 9; i++){
+    for(int i = 0; i < 9; i++)
         m_boardState->setFieldAt(i, BoardState::Field::Empty);
-    }
 
     emit restarted();
 
@@ -95,10 +93,10 @@ void GameMaster::askNext()
 
     switch(m_initiative) {
     case Initiative::Cross:
-        m_crossPlayer->startTurn(m_boardState, m_lastMove);
+        m_crossPlayer->startTurn(m_boardState);
         break;
     case Initiative::Nough:
-        m_noughPlayer->startTurn(m_boardState, m_lastMove);
+        m_noughPlayer->startTurn(m_boardState);
         break;
     default:
         break;

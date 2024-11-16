@@ -19,9 +19,9 @@ public:
     explicit Player(Team team, QObject *parent = nullptr);
     virtual ~Player();
 
-    virtual QFuture<int> play(const BoardState * boardState, int lastMove) = 0;
+    virtual QFuture<int> play(const BoardState *boardState) = 0;
 public slots:
-    void startTurn(const BoardState * boardState, int lastMove);
+    void startTurn(const BoardState *boardState);
 signals:
     void endTurn(int move);
 protected:
@@ -36,7 +36,7 @@ public:
     explicit HumanPlayer(Team team, QObject *parent = nullptr) : Player(team,parent) {}
     virtual ~HumanPlayer();
 
-    virtual QFuture<int> play(const BoardState * boardState, int lastMove) override;
+    virtual QFuture<int> play(const BoardState *boardState) override;
     Q_INVOKABLE void selectSlot(int ix);
 protected:
     QMutex m_mutex;
@@ -49,7 +49,7 @@ class ComputerPlayer : public Player
 public:
     explicit ComputerPlayer(Team team, QObject *parent = nullptr);
 
-    virtual QFuture<int> play(const BoardState * boardState, int lastMove) override;
+    virtual QFuture<int> play(const BoardState *boardState) override;
 protected:
     QFuture<int> sendMove(int move);
     QRandomGenerator m_random;
