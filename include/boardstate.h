@@ -40,6 +40,9 @@ public:
 
     BoardResult checkForEndCondition(int ix);
 
+    static constexpr const int diagonalTopLeft[3] = {0,4,8};
+    static constexpr const int diagonalTopRight[3] = {2,4,6};
+
 protected:
     std::array<Field,9> m_fields;
 };

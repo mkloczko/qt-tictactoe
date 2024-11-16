@@ -2,6 +2,7 @@
 #define PLAYER_H
 
 #include <QObject>
+#include <QRandomGenerator>
 #include <QFuture>
 #include <QMutex>
 #include "boardstate.h"
@@ -18,7 +19,7 @@ public:
     explicit Player(Team team, QObject *parent = nullptr);
     virtual ~Player();
 
-    virtual QFuture<int> play(const BoardState * boardState, int lastMove);
+    virtual QFuture<int> play(const BoardState * boardState, int lastMove) = 0;
 public slots:
     void startTurn(const BoardState * boardState, int lastMove);
 signals:
@@ -40,6 +41,18 @@ public:
 protected:
     QMutex m_mutex;
     int m_selection = -1;
+};
+
+class ComputerPlayer : public Player
+{
+    Q_OBJECT
+public:
+    explicit ComputerPlayer(Team team, QObject *parent = nullptr);
+
+    virtual QFuture<int> play(const BoardState * boardState, int lastMove) override;
+protected:
+    QFuture<int> sendMove(int move);
+    QRandomGenerator m_random;
 };
 
 #endif // PLAYER_H

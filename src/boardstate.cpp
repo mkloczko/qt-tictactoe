@@ -24,9 +24,6 @@ BoardState::Field BoardState::getFieldAt(int ix) const
 
 BoardResult BoardState::checkForEndCondition(int ix)
 {
-    static constexpr int diagonalTopLeft[3] = {0,4,8};
-    static constexpr int diagonalTopRight[3] = {2,4,6};
-
     const Field state = getFieldAt(ix);
 
     int columnId = ix % 3;

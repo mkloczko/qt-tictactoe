@@ -15,7 +15,7 @@ void GameMaster::restart(Initiative newInitiative, bool humanNough, bool humanCr
         if (isHuman)
             return new HumanPlayer(team,this);
         else
-            return new Player(team,this);
+            return new ComputerPlayer(team,this);
     };
 
     if (m_crossPlayer)
