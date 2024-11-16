@@ -1,5 +1,5 @@
-#ifndef GAMESTATE_H
-#define GAMESTATE_H
+#ifndef BOARDSTATE_H
+#define BOARDSTATE_H
 
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
@@ -21,27 +21,27 @@ public:
     bool isTopRightDiagonalWinning = false;
 };
 
-class GameState : public QObject
+class BoardState : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
 public:
-    enum class SlotState {
+    enum class Field {
         Empty,
         Nough,
         Cross,
-    }; Q_ENUM(SlotState)
+    }; Q_ENUM(Field)
 
-    explicit GameState(QObject *parent = nullptr);
+    explicit BoardState(QObject *parent = nullptr);
 
-    const std::array<SlotState,9> & getSlots() const;
-    void setSlotAt(int ix, SlotState state);
-    Q_INVOKABLE SlotState getSlotAt(int ix) const;
+    const std::array<Field,9> & getFields() const;
+    void setFieldAt(int ix, Field field);
+    Q_INVOKABLE Field getFieldAt(int ix) const;
 
     BoardResult checkForEndCondition(int ix);
 
 protected:
-    std::array<SlotState,9> m_slots;
+    std::array<Field,9> m_fields;
 };
 
-#endif // GAMESTATE_H
+#endif // BOARDSTATE_H

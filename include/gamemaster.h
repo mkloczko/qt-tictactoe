@@ -3,13 +3,13 @@
 
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
-#include "gamestate.h"
+#include "boardstate.h"
 #include "player.h"
 
 class GameMaster : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(const GameState* gameState READ getGameState)
+    Q_PROPERTY(const BoardState* boardState READ getBoardState)
     QML_ELEMENT
 public:
     enum class Initiative {
@@ -23,7 +23,7 @@ public:
     Q_INVOKABLE void restart(Initiative newInitiative, bool humanNough, bool humanCross);
     Q_INVOKABLE HumanPlayer * getCurrentHumanPlayer();
 
-    const GameState * getGameState() const {return m_gameState;}
+    const BoardState * getBoardState() const {return m_boardState;}
     const Initiative getInitiative() const {return m_initiative;}
 
 public slots:
@@ -39,7 +39,7 @@ protected:
     void performMove(Initiative who, int ix);
     void askNext();
 
-    GameState * m_gameState = nullptr;
+    BoardState * m_boardState = nullptr;
     Initiative m_initiative;
     int m_lastMove = -1;
 

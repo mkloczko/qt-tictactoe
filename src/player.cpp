@@ -21,7 +21,7 @@ Player::~Player()
     m_worker.waitForFinished();
 }
 
-QFuture<int> Player::play(const GameState * gameState, int lastMove)
+QFuture<int> Player::play(const BoardState * boardState, int lastMove)
 {
     return QtConcurrent::run([this]() -> int {
         QThread::msleep(QRandomGenerator::global()->bounded(150,600));
@@ -29,9 +29,9 @@ QFuture<int> Player::play(const GameState * gameState, int lastMove)
     });
 }
 
-void Player::startTurn(const GameState * gameState, int lastMove)
+void Player::startTurn(const BoardState * boardState, int lastMove)
 {
-    m_worker = play(gameState, lastMove);
+    m_worker = play(boardState, lastMove);
     m_worker.then([this](int result) {
         emit endTurn(result);
     }).onFailed([this] {
@@ -46,7 +46,7 @@ HumanPlayer::~HumanPlayer()
     m_mutex.unlock();
 }
 
-QFuture<int> HumanPlayer::play(const GameState * gameState, int lastMove)
+QFuture<int> HumanPlayer::play(const BoardState * boardState, int lastMove)
 {
     m_mutex.lock();
     return QtConcurrent::run([this]() -> int {

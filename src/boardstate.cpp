@@ -1,33 +1,33 @@
-#include "gamestate.h"
+#include "boardstate.h"
 
-GameState::GameState(QObject *parent)
+BoardState::BoardState(QObject *parent)
     : QObject{parent}
 {
 }
 
-const std::array<GameState::SlotState,9> & GameState::getSlots() const
+const std::array<BoardState::Field,9> & BoardState::getFields() const
 {
-    return m_slots;
+    return m_fields;
 }
 
-void GameState::setSlotAt(int ix, SlotState state)
-{
-    Q_ASSERT(ix >= 0 && ix < 9);
-    m_slots[ix] = state;
-}
-
-GameState::SlotState GameState::getSlotAt(int ix) const
+void BoardState::setFieldAt(int ix, Field field)
 {
     Q_ASSERT(ix >= 0 && ix < 9);
-    return m_slots[ix];
+    m_fields[ix] = field;
 }
 
-BoardResult GameState::checkForEndCondition(int ix)
+BoardState::Field BoardState::getFieldAt(int ix) const
+{
+    Q_ASSERT(ix >= 0 && ix < 9);
+    return m_fields[ix];
+}
+
+BoardResult BoardState::checkForEndCondition(int ix)
 {
     static constexpr int diagonalTopLeft[3] = {0,4,8};
     static constexpr int diagonalTopRight[3] = {2,4,6};
 
-    const SlotState state = getSlotAt(ix);
+    const Field state = getFieldAt(ix);
 
     int columnId = ix % 3;
     int rowId = ix / 3;
@@ -39,23 +39,23 @@ BoardResult GameState::checkForEndCondition(int ix)
     bool allChecked = true;
 
     for (int i = 0; i < 3 && columnWin; i++) {
-        columnWin = getSlotAt(i*3 + columnId) == state;
+        columnWin = getFieldAt(i*3 + columnId) == state;
     }
 
     for (int i = 0; i < 3 && rowWin; i++) {
-        rowWin = getSlotAt(rowId*3 + i) == state;
+        rowWin = getFieldAt(rowId*3 + i) == state;
     }
 
     for (int i = 0; i < 3 && diagonalTopLeftWin; i++) {
-        diagonalTopLeftWin = getSlotAt(diagonalTopLeft[i]) == state;
+        diagonalTopLeftWin = getFieldAt(diagonalTopLeft[i]) == state;
     }
 
     for (int i = 0; i < 3 && diagonalTopRightWin; i++) {
-        diagonalTopRightWin = getSlotAt(diagonalTopRight[i]) == state;
+        diagonalTopRightWin = getFieldAt(diagonalTopRight[i]) == state;
     }
 
     for (int i = 0; i < 9 && allChecked; i++) {
-        allChecked = getSlotAt(i) != SlotState::Empty;
+        allChecked = getFieldAt(i) != Field::Empty;
     }
 
     BoardResult result;

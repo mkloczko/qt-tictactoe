@@ -106,10 +106,10 @@ Item {
             var drawer;
             var x = ix % 3
             var y = Math.floor(ix / 3)
-            var slotState = parent.gameMaster.gameState.getSlotAt(ix)
-            if (slotState === GameState.SlotState.Cross)
+            var slotState = parent.gameMaster.boardState.getFieldAt(ix)
+            if (slotState === BoardState.Field.Cross)
                 drawer = drawCross;
-            else if (slotState === GameState.SlotState.Nough)
+            else if (slotState === BoardState.Field.Nough)
                 drawer = drawNough;
             else
                 return;

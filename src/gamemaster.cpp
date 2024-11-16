@@ -1,12 +1,12 @@
 #include "gamemaster.h"
 
-#include "gamestate.h"
+#include "boardstate.h"
 
 GameMaster::GameMaster(QObject *parent)
     : QObject{parent}
 {
     m_initiative = Initiative::Finish;
-    m_gameState = new GameState(this);
+    m_boardState = new BoardState(this);
 }
 
 void GameMaster::restart(Initiative newInitiative, bool humanNough, bool humanCross)
@@ -33,7 +33,7 @@ void GameMaster::restart(Initiative newInitiative, bool humanNough, bool humanCr
     m_lastMove = -1;
 
     for(int i = 0; i < 9; i++){
-        m_gameState->setSlotAt(i, GameState::SlotState::Empty);
+        m_boardState->setFieldAt(i, BoardState::Field::Empty);
     }
 
     emit restarted();
@@ -65,18 +65,18 @@ void GameMaster::crossMove(int ix)
 
 void GameMaster::performMove(Initiative who, int ix)
 {
-    using SlotState = GameState::SlotState;
+    using Field = BoardState::Field;
     if (m_initiative != who || ix < 0 || ix >= 9)
         return;
 
     Initiative other = who == Initiative::Cross ? Initiative::Nough : Initiative::Cross;
-    SlotState state = who == Initiative::Cross ? SlotState::Cross : SlotState::Nough;
+    Field state = who == Initiative::Cross ? Field::Cross : Field::Nough;
 
-    if (m_gameState->getSlotAt(ix) == GameState::SlotState::Empty) {
-        m_gameState->setSlotAt(ix, state);
+    if (m_boardState->getFieldAt(ix) == Field::Empty) {
+        m_boardState->setFieldAt(ix, state);
         emit boardUpdated(ix);
 
-        BoardResult result = m_gameState->checkForEndCondition(ix);
+        BoardResult result = m_boardState->checkForEndCondition(ix);
         if (result.isFinished) {
             m_initiative = Initiative::Finish;
             emit finished(result);
@@ -95,10 +95,10 @@ void GameMaster::askNext()
 
     switch(m_initiative) {
     case Initiative::Cross:
-        m_crossPlayer->startTurn(m_gameState, m_lastMove);
+        m_crossPlayer->startTurn(m_boardState, m_lastMove);
         break;
     case Initiative::Nough:
-        m_noughPlayer->startTurn(m_gameState, m_lastMove);
+        m_noughPlayer->startTurn(m_boardState, m_lastMove);
         break;
     default:
         break;
