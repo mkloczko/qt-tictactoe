@@ -7,10 +7,13 @@ Item {
             canvas.drawElement(ix)
             canvas.requestPaint()
         }
-
         onRestarted: {
             canvas.clear()
             canvas.drawGrid()
+            canvas.requestPaint()
+        }
+        onFinished: (result) => {
+            canvas.drawResult(result)
             canvas.requestPaint()
         }
     }
@@ -47,6 +50,33 @@ Item {
             ctx.lineTo(width - margin, height/3)
             ctx.moveTo(margin, 2*height/3)
             ctx.lineTo(width - margin, 2*height/3)
+            ctx.stroke()
+        }
+
+        function drawResult(result)
+        {
+            var ctx = getContext("2d");
+            var margin = 25;
+
+            ctx.lineWidth = 6;
+            ctx.strokeStyle = "#334433"
+            ctx.beginPath()
+            if (result.winningColumn >= 0) {
+                ctx.moveTo(result.winningColumn*width/3+width/6, margin)
+                ctx.lineTo(result.winningColumn*width/3+width/6, height - margin)
+            }
+            if (result.winningRow >= 0) {
+                ctx.moveTo(margin, result.winningRow*height/3+height/6)
+                ctx.lineTo(width - margin, result.winningRow*height/3+height/6)
+            }
+            if (result.isTopLeftDiagonalWinning) {
+                ctx.moveTo(margin, margin)
+                ctx.lineTo(width - margin, height - margin)
+            }
+            if (result.isTopRightDiagonalWinning) {
+                ctx.moveTo(width - margin, margin)
+                ctx.lineTo(margin, height - margin)
+            }
             ctx.stroke()
         }
 

@@ -74,12 +74,15 @@ void GameMaster::performMove(Initiative who, int ix)
 
     if (m_gameState->getSlotAt(ix) == GameState::SlotState::Empty) {
         m_gameState->setSlotAt(ix, state);
-        if (checkForEndCondition(ix))
-            m_initiative = Initiative::Finish;
-        else
-            m_initiative = other;
-
         emit boardUpdated(ix);
+
+        BoardResult result = m_gameState->checkForEndCondition(ix);
+        if (result.isFinished) {
+            m_initiative = Initiative::Finish;
+            emit finished(result);
+        } else {
+            m_initiative = other;
+        }
     }
 
     askNext();
@@ -100,38 +103,4 @@ void GameMaster::askNext()
     default:
         break;
     }
-}
-
-bool GameMaster::checkForEndCondition(int ix)
-{
-    static constexpr int diagonalTopLeft[3] = {0,4,8};
-    static constexpr int diagonalTopRight[3] = {2,4,6};
-
-    const GameState::SlotState state = m_gameState->getSlotAt(ix);
-
-    int columnId = ix % 3;
-    int rowId = ix / 3;
-
-    bool columnWin = true;
-    bool rowWin = true;
-    bool diagonalTopLeftWin = ix == diagonalTopLeft[0] || ix == diagonalTopLeft[1] || ix == diagonalTopLeft[2];
-    bool diagonalTopRightWin = ix == diagonalTopRight[0] || ix == diagonalTopRight[1] || ix == diagonalTopRight[2];
-
-    for (int i = 0; i < 3 && columnWin; i++) {
-        columnWin = m_gameState->getSlotAt(i*3 + columnId) == state;
-    }
-
-    for (int i = 0; i < 3 && rowWin; i++) {
-        rowWin = m_gameState->getSlotAt(rowId*3 + i) == state;
-    }
-
-    for (int i = 0; i < 3 && diagonalTopLeftWin; i++) {
-        diagonalTopLeftWin = m_gameState->getSlotAt(diagonalTopLeft[i]) == state;
-    }
-
-    for (int i = 0; i < 3 && diagonalTopRightWin; i++) {
-        diagonalTopRightWin = m_gameState->getSlotAt(diagonalTopRight[i]) == state;
-    }
-
-    return columnWin || rowWin || diagonalTopLeftWin || diagonalTopRightWin;
 }

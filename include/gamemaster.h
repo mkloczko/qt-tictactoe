@@ -32,12 +32,12 @@ public slots:
 
 signals:
     void boardUpdated(int ix);
+    void finished(BoardResult result);
     void restarted();
 
 protected:
     void performMove(Initiative who, int ix);
     void askNext();
-    bool checkForEndCondition(int ix);
 
     GameState * m_gameState = nullptr;
     Initiative m_initiative;
